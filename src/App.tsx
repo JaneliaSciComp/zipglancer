@@ -65,6 +65,7 @@ function Explorer({ url }: { url: string }) {
           root={primaryRoot}
           ozx={ozx}
           metadata={omeZarr.data ?? null}
+          entries={zip.entries}
           collapsed={cardCollapsed}
           onToggleCollapsed={() => setCardCollapsed(c => !c)}
         />

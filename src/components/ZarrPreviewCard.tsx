@@ -6,13 +6,14 @@ import { HiChevronDown, HiChevronUp } from 'react-icons/hi2';
 import zarrLogo from '@/assets/zarr.jpg';
 import neuroglancer_logo from '@/assets/neuroglancer.png';
 import ZarrMetadataTable from '@/components/ZarrMetadataTable';
+import OzxPropertiesTable from '@/components/OzxPropertiesTable';
 import {
   buildZipZarrSource,
   buildSimpleNeuroglancerUrl,
   buildOmeZarrNeuroglancerUrl,
   layerNameFor
 } from '@/lib/neuroglancer';
-import type { OzxInfo, ZarrRoot } from '@/lib/types';
+import type { OzxInfo, ZarrRoot, ZipEntry } from '@/lib/types';
 import type { OmeZarrMetadata } from '@/lib/zarrStore';
 import { useOmeZarrThumbnail } from '@/queries/zipQueries';
 
@@ -21,6 +22,7 @@ type ZarrPreviewCardProps = {
   readonly root: ZarrRoot;
   readonly ozx: OzxInfo;
   readonly metadata: OmeZarrMetadata | null;
+  readonly entries: ZipEntry[];
   readonly collapsed: boolean;
   readonly onToggleCollapsed: () => void;
 };
@@ -35,6 +37,7 @@ export default function ZarrPreviewCard({
   root,
   ozx,
   metadata,
+  entries,
   collapsed,
   onToggleCollapsed
 }: ZarrPreviewCardProps) {
@@ -124,6 +127,11 @@ export default function ZarrPreviewCard({
                 multiscale={metadata.multiscale}
                 shapes={metadata.shapes}
                 zarrVersion={metadata.zarrVersion}
+              />
+              <OzxPropertiesTable
+                ozx={ozx}
+                root={root}
+                entries={entries}
               />
             </div>
           ) : root.path !== '' ? (
