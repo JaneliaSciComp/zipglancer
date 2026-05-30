@@ -10,6 +10,7 @@ import OzxPropertiesTable from '@/components/OzxPropertiesTable';
 import {
   buildZipZarrSource,
   buildSimpleNeuroglancerUrl,
+  buildOmeZarrNeuroglancerUrl,
   layerNameFor
 } from '@/lib/neuroglancer';
 import type { OzxInfo, ZarrRoot, ZipEntry } from '@/lib/types';
@@ -52,7 +53,9 @@ export default function ZarrPreviewCard({
     });
   };
 
-  const neuroglancerUrl = buildSimpleNeuroglancerUrl(source, layerName);
+  const neuroglancerUrl = metadata
+    ? buildOmeZarrNeuroglancerUrl(source, layerName, metadata.multiscale, metadata.arr, metadata.omero)
+    : buildSimpleNeuroglancerUrl(source, layerName);
 
   const versionLabel = `OME-Zarr ${root.version}`;
   const fileName = zipUrl.split('/').filter(Boolean).pop() ?? zipUrl;
