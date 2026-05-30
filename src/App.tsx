@@ -23,6 +23,7 @@ function readShowSuggestions(): boolean {
 
 function Explorer({ url }: { url: string }) {
   const [selected, setSelected] = useState<{ name: string; size: number } | null>(null);
+  const [maximized, setMaximized] = useState(false);
   const archive = useZipArchive(url);
   const omeZarr = useOmeZarrMetadata(url, archive.data?.primaryRoot ?? null);
 
@@ -59,18 +60,25 @@ function Explorer({ url }: { url: string }) {
         </Typography>
       )}
 
-      <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-2">
-        <EntryList
-          entries={zip.entries}
-          onSelect={entry => setSelected({ name: entry.name, size: entry.uncompressedSize })}
-        />
+      <div className={`grid min-h-0 flex-1 gap-3 ${maximized ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
+        {!maximized ? (
+          <EntryList
+            entries={zip.entries}
+            onSelect={entry => {
+              setSelected({ name: entry.name, size: entry.uncompressedSize });
+              setMaximized(false);
+            }}
+          />
+        ) : null}
         {selected ? (
           <EntryPreview
             key={selected.name}
             zip={zip}
             name={selected.name}
             uncompressedSize={selected.size}
-            onClose={() => setSelected(null)}
+            onClose={() => { setSelected(null); setMaximized(false); }}
+            maximized={maximized}
+            onToggleMaximize={() => setMaximized(m => !m)}
           />
         ) : (
           <div className="hidden items-center justify-center rounded-md border border-dashed border-surface text-sm text-foreground lg:flex">

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Tooltip, Typography } from '@material-tailwind/react';
 import { HiOutlineClipboardCopy } from 'react-icons/hi';
+import { HiChevronDown, HiChevronUp } from 'react-icons/hi2';
 
 import zarrLogo from '@/assets/zarr.jpg';
 import neuroglancer_logo from '@/assets/neuroglancer.png';
@@ -37,6 +38,7 @@ export default function ZarrPreviewCard({
   const layerName = layerNameFor(zipUrl, root.path);
   const thumbnailQuery = useOmeZarrThumbnail(zipUrl, root);
   const [copied, setCopied] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(source).then(() => {
@@ -56,8 +58,26 @@ export default function ZarrPreviewCard({
         )
       : buildSimpleNeuroglancerUrl(source, layerName);
 
+  const versionLabel = `OME-Zarr ${root.version}`;
+  const fileName = zipUrl.split('/').filter(Boolean).pop() ?? zipUrl;
+
   return (
-    <div className="min-w-full p-4 shadow-sm rounded-md bg-primary-light/30">
+    <div className="min-w-full shadow-sm rounded-md bg-primary-light/30">
+      {/* Collapse toggle bar */}
+      <button
+        className="flex w-full items-center justify-between px-4 py-2 text-left"
+        onClick={() => setCollapsed(c => !c)}
+      >
+        <Typography className="font-semibold text-sm text-surface-foreground">
+          {versionLabel} detected · {fileName}
+        </Typography>
+        {collapsed
+          ? <HiChevronDown className="h-4 w-4 shrink-0 text-foreground" />
+          : <HiChevronUp className="h-4 w-4 shrink-0 text-foreground" />}
+      </button>
+
+      {collapsed ? null : (
+      <div className="px-4 pb-4">
       <div className="flex gap-12 w-full h-fit">
 
         {/* LEFT COLUMN: thumbnail only */}
@@ -179,6 +199,8 @@ export default function ZarrPreviewCard({
 
         </div>
       </div>
+      </div>
+      )}
     </div>
   );
 }

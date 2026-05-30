@@ -7,7 +7,7 @@ import {
   coy
 } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Formatter } from 'fracturedjsonjs';
-import { HiXMark } from 'react-icons/hi2';
+import { HiXMark, HiArrowsPointingOut, HiArrowsPointingIn } from 'react-icons/hi2';
 
 import HexDump from '@/components/HexDump';
 import useDarkMode from '@/hooks/useDarkMode';
@@ -37,13 +37,17 @@ type EntryPreviewProps = {
   readonly name: string;
   readonly uncompressedSize: number;
   readonly onClose: () => void;
+  readonly maximized?: boolean;
+  readonly onToggleMaximize?: () => void;
 };
 
 export default function EntryPreview({
   zip,
   name,
   uncompressedSize,
-  onClose
+  onClose,
+  maximized = false,
+  onToggleMaximize
 }: EntryPreviewProps) {
   const isDarkMode = useDarkMode();
   const [formatJson, setFormatJson] = useState(true);
@@ -144,6 +148,18 @@ export default function EntryPreview({
                 onChange={() => setFormatJson(f => !f)}
               />
             </div>
+          ) : null}
+          {onToggleMaximize ? (
+            <button
+              aria-label={maximized ? 'Restore' : 'Maximize'}
+              className="rounded p-1 text-foreground hover:bg-surface"
+              onClick={onToggleMaximize}
+              title={maximized ? 'Restore' : 'Maximize'}
+            >
+              {maximized
+                ? <HiArrowsPointingIn className="h-5 w-5" />
+                : <HiArrowsPointingOut className="h-5 w-5" />}
+            </button>
           ) : null}
           <button
             aria-label="Close preview"
