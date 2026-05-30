@@ -21,6 +21,8 @@ type ZarrPreviewCardProps = {
   readonly root: ZarrRoot;
   readonly ozx: OzxInfo;
   readonly metadata: OmeZarrMetadata | null;
+  readonly collapsed: boolean;
+  readonly onToggleCollapsed: () => void;
 };
 
 const CIRCLE_CLASSES =
@@ -32,13 +34,14 @@ export default function ZarrPreviewCard({
   zipUrl,
   root,
   ozx,
-  metadata
+  metadata,
+  collapsed,
+  onToggleCollapsed
 }: ZarrPreviewCardProps) {
   const source = buildZipZarrSource(zipUrl, root.path, root.version);
   const layerName = layerNameFor(zipUrl, root.path);
   const thumbnailQuery = useOmeZarrThumbnail(zipUrl, root);
   const [copied, setCopied] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(source).then(() => {
@@ -66,7 +69,7 @@ export default function ZarrPreviewCard({
       {/* Collapse toggle bar */}
       <button
         className="flex w-full items-center justify-between px-4 py-2 text-left"
-        onClick={() => setCollapsed(c => !c)}
+        onClick={onToggleCollapsed}
       >
         <Typography className="font-semibold text-sm text-surface-foreground">
           {versionLabel} detected · {fileName}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Switch, Typography } from '@material-tailwind/react';
 
 import Header from '@/components/Header';
@@ -24,6 +24,18 @@ function readShowSuggestions(): boolean {
 function Explorer({ url }: { url: string }) {
   const [selected, setSelected] = useState<{ name: string; size: number } | null>(null);
   const [maximized, setMaximized] = useState(false);
+  const [cardCollapsed, setCardCollapsed] = useState(false);
+  const collapsedBeforeMaximize = useRef(false);
+
+  const handleToggleMaximize = () => {
+    if (!maximized) {
+      collapsedBeforeMaximize.current = cardCollapsed;
+      setCardCollapsed(true);
+    } else {
+      setCardCollapsed(collapsedBeforeMaximize.current);
+    }
+    setMaximized(m => !m);
+  };
   const archive = useZipArchive(url);
   const omeZarr = useOmeZarrMetadata(url, archive.data?.primaryRoot ?? null);
 
@@ -53,6 +65,8 @@ function Explorer({ url }: { url: string }) {
           root={primaryRoot}
           ozx={ozx}
           metadata={omeZarr.data ?? null}
+          collapsed={cardCollapsed}
+          onToggleCollapsed={() => setCardCollapsed(c => !c)}
         />
       ) : (
         <Typography className="rounded-md bg-surface-light px-3 py-2 text-sm text-foreground">
@@ -78,7 +92,7 @@ function Explorer({ url }: { url: string }) {
             uncompressedSize={selected.size}
             onClose={() => { setSelected(null); setMaximized(false); }}
             maximized={maximized}
-            onToggleMaximize={() => setMaximized(m => !m)}
+            onToggleMaximize={handleToggleMaximize}
           />
         ) : (
           <div className="hidden items-center justify-center rounded-md border border-dashed border-surface text-sm text-foreground lg:flex">
