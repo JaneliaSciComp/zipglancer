@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react';
-import { Typography } from '@material-tailwind/react';
-import { HiFolder, HiChevronRight, HiChevronDown } from 'react-icons/hi2';
+import { Typography, Tooltip } from '@material-tailwind/react';
+import { HiFolder, HiChevronRight, HiChevronDown, HiArrowDownTray, HiOutlineMagnifyingGlass } from 'react-icons/hi2';
 import { TbFile } from 'react-icons/tb';
-import { HiOutlineMagnifyingGlass } from 'react-icons/hi2';
 
 import { formatBytes } from '@/lib/format';
 import type { ZipEntry } from '@/lib/types';
@@ -22,12 +21,29 @@ function initialExpanded(_root: DirNode): Set<string> {
 type EntryListProps = {
   readonly entries: ZipEntry[];
   readonly onSelect: (entry: ZipEntry) => void;
+  readonly onDownload?: (entry: ZipEntry) => Promise<void>;
 };
 
-export default function EntryList({ entries, onSelect }: EntryListProps) {
+export default function EntryList({ entries, onSelect, onDownload }: EntryListProps) {
   const tree = useMemo(() => buildTree(entries), [entries]);
   const [expanded, setExpanded] = useState<Set<string>>(() => initialExpanded(tree));
   const [filter, setFilter] = useState('');
+  const [downloading, setDownloading] = useState<Set<string>>(new Set());
+
+  const handleDownload = async (e: React.MouseEvent, entry: ZipEntry) => {
+    e.stopPropagation();
+    if (!onDownload || downloading.has(entry.name)) return;
+    setDownloading(prev => new Set(prev).add(entry.name));
+    try {
+      await onDownload(entry);
+    } finally {
+      setDownloading(prev => {
+        const next = new Set(prev);
+        next.delete(entry.name);
+        return next;
+      });
+    }
+  };
 
   const toggle = (path: string) => {
     setExpanded(prev => {
@@ -83,6 +99,7 @@ export default function EntryList({ entries, onSelect }: EntryListProps) {
               <th className="px-3 py-2 font-medium">Name</th>
               <th className="px-3 py-2 text-right font-medium">Size</th>
               <th className="px-3 py-2 text-right font-medium">Compressed</th>
+              {onDownload ? <th className="px-2 py-2" /> : null}
             </tr>
           </thead>
           <tbody>
@@ -138,6 +155,32 @@ export default function EntryList({ entries, onSelect }: EntryListProps) {
                       ? '—'
                       : formatBytes(row.entry.compressedSize)}
                   </td>
+                  {onDownload ? (
+                    <td className="px-2 py-1.5">
+                      {!row.isDirectory && row.entry ? (
+                        <Tooltip>
+                          <Tooltip.Trigger as="div">
+                            <button
+                              className="flex items-center justify-center rounded p-1 text-foreground/60 hover:bg-surface hover:text-foreground disabled:opacity-40"
+                              disabled={downloading.has(row.entry.name)}
+                              onClick={e => handleDownload(e, row.entry!)}
+                              aria-label="Download"
+                            >
+                              {downloading.has(row.entry.name) ? (
+                                <span className="h-4 w-4 animate-spin rounded-full border-2 border-foreground/30 border-t-foreground" />
+                              ) : (
+                                <HiArrowDownTray className="h-4 w-4" />
+                              )}
+                            </button>
+                          </Tooltip.Trigger>
+                          <Tooltip.Content>
+                            Download
+                            <Tooltip.Arrow />
+                          </Tooltip.Content>
+                        </Tooltip>
+                      ) : null}
+                    </td>
+                  ) : null}
                 </tr>
               );
             })}

@@ -67,6 +67,18 @@ function Explorer({ url, initialEntry, initialMaximized, initialCollapsed }: Exp
     updateUrlState({ entry: null, maximized: false });
   };
 
+  const handleDownload = async (entry: { name: string }) => {
+    if (!archive.data) return;
+    const bytes = await archive.data.zip.readBytes(entry.name);
+    const blob = new Blob([bytes]);
+    const href = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = href;
+    a.download = entry.name.split('/').pop() ?? entry.name;
+    a.click();
+    URL.revokeObjectURL(href);
+  };
+
   if (archive.isLoading) {
     return <Typography className="text-foreground">Reading archive…</Typography>;
   }
@@ -101,7 +113,7 @@ function Explorer({ url, initialEntry, initialMaximized, initialCollapsed }: Exp
 
       <div className={`grid gap-3 min-h-[40vh] lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:grid-rows-1 ${maximized ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
         {!maximized ? (
-          <EntryList entries={zip.entries} onSelect={handleSelect} />
+          <EntryList entries={zip.entries} onSelect={handleSelect} onDownload={handleDownload} />
         ) : null}
         {selected ? (
           <EntryPreview
