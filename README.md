@@ -31,8 +31,10 @@ All processing is done in the browser via HTTP range requests — the archive is
 
 ## Integration with Fileglancer
 
-Fileglancer produces range-capable data links via its `/api/content/` endpoint.
-Pass the data link as the `url` query parameter:
+[Fileglancer](https://github.com/JaneliaSciComp/fileglancer) is a web application
+for browsing, sharing, and managing scientific imaging data. It produces
+range-capable data links via its `/api/content/` endpoint that zipglancer can open
+directly. Pass the data link as the `url` query parameter:
 
 ```
 https://zipglancer.example.org/?url=https://fileglancer.example.org/api/content/myFsp/data.ozx
