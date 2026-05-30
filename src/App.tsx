@@ -74,7 +74,7 @@ function Explorer({ url }: { url: string }) {
         </Typography>
       )}
 
-      <div className={`grid min-h-0 flex-1 overflow-hidden gap-3 ${maximized ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
+      <div className={`grid min-h-0 flex-1 overflow-hidden gap-3 lg:grid-rows-1 ${maximized ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
         {!maximized ? (
           <EntryList
             entries={zip.entries}
