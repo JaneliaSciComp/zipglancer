@@ -77,7 +77,7 @@ export default function ZarrPreviewCard({
 
       {collapsed ? null : (
       <div className="px-4 pb-4">
-      <div className="flex gap-12 w-full h-fit">
+      <div className="flex flex-col md:flex-row gap-6 md:gap-12 w-full">
 
         {/* LEFT COLUMN: thumbnail only */}
         <div className="flex flex-col gap-2 shrink-0">
@@ -137,7 +137,7 @@ export default function ZarrPreviewCard({
           ) : null}
 
           {/* Open with + source URL */}
-          <div className="flex items-start gap-8">
+          <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-8">
             {/* Open with */}
             <div className="flex flex-col gap-1 shrink-0">
               <Typography className="font-semibold text-sm text-surface-foreground">
