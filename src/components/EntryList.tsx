@@ -9,7 +9,8 @@ import type { ZipEntry } from '@/lib/types';
 import {
   buildTree,
   flattenVisible,
-  type DirNode
+  type DirNode,
+  type VisibleRow
 } from '@/lib/entryTree';
 
 function initialExpanded(_root: DirNode): Set<string> {
