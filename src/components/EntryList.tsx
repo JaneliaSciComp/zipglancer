@@ -163,7 +163,7 @@ export default function EntryList({ entries, onSelect }: EntryListProps) {
   }, [needle, entries, tree, expanded]);
 
   return (
-    <div className="flex min-h-0 flex-col">
+    <div className="flex h-full min-h-0 flex-col">
       <div className="flex items-center justify-between gap-3 py-2">
         <Typography className="font-semibold text-surface-foreground">
           Contents ({entries.filter(e => !e.isDirectory).length} files)
