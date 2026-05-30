@@ -1,15 +1,15 @@
-name: Deploy to GitHub Pages
+name: Deploy test branch to GitHub Pages subdirectory
 
 on:
   push:
-    branches: [main]
+    branches: [test]
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: pages-main
+  group: pages-test
   cancel-in-progress: false
 
 jobs:
@@ -28,13 +28,11 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          ZIPGLANCER_BASE: /${{ github.event.repository.name }}/
+          ZIPGLANCER_BASE: /${{ github.event.repository.name }}/test/
 
-      - name: Deploy to gh-pages (root)
+      - name: Deploy to gh-pages (test/)
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: dist
-          # Preserve subdirectory deployments (e.g. test/) from other branches.
-          clean-exclude: |
-            test
+          target-folder: test
