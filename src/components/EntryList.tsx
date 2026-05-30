@@ -1,11 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Typography } from '@material-tailwind/react';
-import {
-  HiOutlineFolder,
-  HiOutlineDocument,
-  HiChevronUp,
-  HiChevronDown
-} from 'react-icons/hi2';
+import { HiFolder, HiChevronUp, HiChevronDown } from 'react-icons/hi2';
+import { TbFile } from 'react-icons/tb';
 
 import { formatBytes } from '@/lib/format';
 import type { ZipEntry } from '@/lib/types';
@@ -102,9 +98,9 @@ export default function EntryList({ entries, onSelect }: EntryListProps) {
                   <td className="px-3 py-1.5 text-surface-foreground">
                     <span className="flex items-center gap-2 font-mono">
                       {entry.isDirectory ? (
-                        <HiOutlineFolder className="h-4 w-4 shrink-0 text-primary" />
+                        <HiFolder className="h-4 w-4 shrink-0 text-primary" />
                       ) : (
-                        <HiOutlineDocument className="h-4 w-4 shrink-0 text-foreground" />
+                        <TbFile className="h-4 w-4 shrink-0 text-foreground" />
                       )}
                       {entry.name}
                     </span>
