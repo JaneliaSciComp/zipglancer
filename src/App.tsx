@@ -82,7 +82,7 @@ function Explorer({ url, initialEntry, initialMaximized, initialCollapsed }: Exp
   const { zip, ozx, primaryRoot } = archive.data;
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-3">
+    <div className="flex flex-col gap-3 lg:min-h-0 lg:flex-1">
       {primaryRoot ? (
         <ZarrPreviewCard
           zipUrl={url}
@@ -99,7 +99,7 @@ function Explorer({ url, initialEntry, initialMaximized, initialCollapsed }: Exp
         </Typography>
       )}
 
-      <div className={`grid min-h-0 flex-1 overflow-hidden gap-3 lg:grid-rows-1 ${maximized ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
+      <div className={`grid gap-3 min-h-[40vh] lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:grid-rows-1 ${maximized ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
         {!maximized ? (
           <EntryList entries={zip.entries} onSelect={handleSelect} />
         ) : null}
@@ -150,7 +150,7 @@ export default function App() {
   return (
     <div className="flex h-full flex-col bg-background">
       <Header />
-      <main className="flex min-h-0 flex-1 flex-col gap-4 p-5">
+      <main className="flex min-h-0 flex-1 flex-col gap-4 p-5 overflow-auto">
         <div className="flex flex-col gap-3">
           <UrlInput initialUrl={url} onSubmit={handleSubmit} />
           <div className="flex items-center gap-2">
