@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Input, Typography } from '@material-tailwind/react';
 import { HiOutlineMagnifyingGlass } from 'react-icons/hi2';
 
@@ -9,6 +9,10 @@ type UrlInputProps = {
 
 export default function UrlInput({ initialUrl, onSubmit }: UrlInputProps) {
   const [value, setValue] = useState(initialUrl);
+
+  useEffect(() => {
+    setValue(initialUrl);
+  }, [initialUrl]);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
