@@ -116,7 +116,7 @@ export default function EntryPreview({
           paddingBottom: 0,
           fontSize: '13px',
           lineHeight: '1.5',
-          overflow: 'hidden',
+          overflow: 'visible',
           background: 'transparent'
         }}
         language={language}
