@@ -262,4 +262,4 @@ export function buildOmeZarrNeuroglancerUrl(
   return encodeState(state);
 }
 
-export { layerNameFor };
+export { layerNameFor, getResolvedScales, translateUnit as translateUnitToNeuroglancer };

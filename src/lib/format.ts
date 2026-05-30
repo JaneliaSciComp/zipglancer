@@ -28,6 +28,11 @@ const TEXT_EXTENSIONS = new Set([
   'zarray'
 ]);
 
+/** Entries with no extension or a known binary extension are treated as binary. */
+export function isBinaryEntry(name: string): boolean {
+  return !isTextLikeEntry(name);
+}
+
 export function isTextLikeEntry(name: string): boolean {
   const base = name.split('/').pop() ?? name;
   if (base === '.zattrs' || base === '.zgroup' || base === '.zarray') {

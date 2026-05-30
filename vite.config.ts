@@ -17,6 +17,14 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   },
+  server: {
+    fs: {
+      // Disable Vite's strict file-path security check. Without this, Vite 6
+      // decodes the %2F-encoded slashes in the ?url= query parameter and
+      // incorrectly treats the decoded value as a filesystem path to validate.
+      strict: false
+    }
+  },
   build: {
     sourcemap: true,
     outDir: 'dist',

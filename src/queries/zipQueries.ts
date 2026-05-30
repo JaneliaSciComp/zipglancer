@@ -5,7 +5,7 @@ import { openZip } from '@/lib/zipReader';
 import type { OpenedZip } from '@/lib/zipReader';
 import { parseOzxComment } from '@/lib/ozx';
 import { findZarrRoots, pickPrimaryRoot } from '@/lib/zarrDetect';
-import { readOmeZarrAtRoot } from '@/lib/zarrStore';
+import { readOmeZarrAtRoot, renderOmeZarrThumbnail } from '@/lib/zarrStore';
 import type { OmeZarrMetadata } from '@/lib/zarrStore';
 import type { OzxInfo, ZarrRoot } from '@/lib/types';
 
@@ -51,5 +51,18 @@ export function useOmeZarrMetadata(
     queryKey: ['ome-zarr-metadata', url ?? '', primaryRoot?.path ?? ''],
     enabled,
     queryFn: async () => readOmeZarrAtRoot(url!)
+  });
+}
+
+export function useOmeZarrThumbnail(
+  url: string | null,
+  primaryRoot: ZarrRoot | null
+): UseQueryResult<string | null, Error> {
+  const enabled = !!url && !!primaryRoot && primaryRoot.path === '';
+  return useQuery({
+    queryKey: ['ome-zarr-thumbnail', url ?? ''],
+    enabled,
+    staleTime: Infinity,
+    queryFn: async ({ signal }) => renderOmeZarrThumbnail(url!, signal)
   });
 }

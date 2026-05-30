@@ -7,7 +7,7 @@ import {
   HiChevronDown
 } from 'react-icons/hi2';
 
-import { formatBytes, isTextLikeEntry } from '@/lib/format';
+import { formatBytes } from '@/lib/format';
 import type { ZipEntry } from '@/lib/types';
 
 type SortKey = 'name' | 'size';
@@ -15,7 +15,7 @@ type SortDir = 'asc' | 'desc';
 
 type EntryListProps = {
   readonly entries: ZipEntry[];
-  readonly onSelect: (name: string) => void;
+  readonly onSelect: (entry: ZipEntry) => void;
 };
 
 export default function EntryList({ entries, onSelect }: EntryListProps) {
@@ -88,7 +88,7 @@ export default function EntryList({ entries, onSelect }: EntryListProps) {
           </thead>
           <tbody>
             {rows.map(entry => {
-              const clickable = !entry.isDirectory && isTextLikeEntry(entry.name);
+              const clickable = !entry.isDirectory;
               return (
                 <tr
                   key={entry.name}
@@ -97,7 +97,7 @@ export default function EntryList({ entries, onSelect }: EntryListProps) {
                       ? 'cursor-pointer hover:bg-hover-gradient'
                       : ''
                   }`}
-                  onClick={clickable ? () => onSelect(entry.name) : undefined}
+                  onClick={clickable ? () => onSelect(entry) : undefined}
                 >
                   <td className="px-3 py-1.5 text-surface-foreground">
                     <span className="flex items-center gap-2 font-mono">

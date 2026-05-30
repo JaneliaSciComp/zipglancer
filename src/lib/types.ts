@@ -27,6 +27,7 @@ export type OzxInfo = {
 export type ZarrArrayLike = {
   shape: number[];
   dtype: string;
+  chunks?: number[];
 };
 
 /** A detected Zarr hierarchy root inside an archive. */

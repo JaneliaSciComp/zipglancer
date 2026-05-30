@@ -32,7 +32,12 @@ export type OpenedZip = {
  * or {@link OpenedZip.readBytes} is called.
  */
 export async function openZip(url: string): Promise<OpenedZip> {
-  const reader = new ZipReader(new HttpRangeReader(url));
+  // forceRangeRequests: skip the Accept-Ranges header check. Some servers
+  // (e.g. S3) support range requests but don't expose Accept-Ranges via CORS
+  // Access-Control-Expose-Headers, so zip.js would otherwise throw ERR_HTTP_RANGE.
+  // Content-Length is a CORS-safelisted header, so the size fallback (HEAD
+  // request) still works even when Content-Range is not exposed.
+  const reader = new ZipReader(new HttpRangeReader(url, { forceRangeRequests: true } as any));
   const rawEntries = await reader.getEntries();
 
   const byName = new Map<string, FileEntry>();
